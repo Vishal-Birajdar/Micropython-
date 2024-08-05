@@ -71,6 +71,9 @@ class call_loop:
                 shared.buffer["R3"] = '0103'
                 shared.buffer["R4"] = '0104'
                 shared.string_json = json.dumps(shared.buffer)
+        elif decoded_topic.endswith("MR"):
+            if decoded_msg == '06':
+                machine.reset()
         elif decoded_topic.endswith("R1"):
             if decoded_msg == '0101':
                 shared.buffer["R1"] = decoded_msg
@@ -127,36 +130,35 @@ class call_loop:
         try:
             time.sleep(1)
             shared.client.check_msg()
-            
             if shared.arm_status == True:
-                pix[0] = GREEN
-                pix.write()
+                shared.pix[0] = shared.GREEN
+                shared.pix.write()
                 time.sleep(1)
                 if shared.act_sensor_cnt == 0:
-                    pix[2] = GREEN
-                    pix.write()
+                    sared.pix[2] = shared.GREEN
+                    shared.pix.write()
                 if shared.act_sensor_cnt == 1:
                     shared.R1State.value(1)
-                    pix[2] = YELLOW
-                    pix.write()
+                    shared.pix[2] = shared.YELLOW
+                    shared.pix.write()
                     shared.buffer["R1"] = "1101"
                 elif shared.act_sensor_cnt == 2:
-                    pix[2] = BLUE
-                    pix.write()
+                    shared.pix[2] = shared.BLUE
+                    shared.pix.write()
                     shared.R2State.value(1)
                     shared.buffer["R2"] = "1102"
                 elif shared.act_sensor_cnt == 3:
-                    pix[2] = PURPLE
-                    pix[1] = ORANGE
-                    pix.write()
+                    shared.pix[2] = shared.PURPLE
+                    shared.pix[1] = shared.ORANGE
+                    shared.pix.write()
                     shared.R3State.value(1)
                     shared.buffer["R3"] = "1103"
                 elif shared.act_sensor_cnt >= 3:
                     if shared.FG_Arm == True:
                         print("FG status ",shared.FG_Arm)
-                        pix[2] = CYAN
-                        pix[1] = RED
-                        pix.write()
+                        shared.pix[2] = shared.CYAN
+                        shared.pix[1] = shared.RED
+                        shared.pix.write()
                         shared.R4State.value(1)
                         shared.buffer["R4"] = "1104"
                         shared.buffer["FD"] = "12"
@@ -175,15 +177,15 @@ class call_loop:
                 shared.buffer["R3"] = '0103'
                 shared.buffer["R4"] = '0104'
                 shared.buffer["FD"] = '01'
-                pix[1] = RED
-                pix.write()
+                shared.pix[1] = shared.RED
+                shared.pix.write()
                 shared.buffer_json[shared.config['device_info']['device_id']]=shared.buffer
                 shared.string_json = json.dumps(shared.buffer_json)
                 shared.client.publish(shared.topic_json,shared.string_json)
         except Exception as e:
             print("Connection failed with error:",e)
-            pix[3] = RED
-            pix.write()
+            shared.pix[3] = shared.RED
+            shared.pix.write()
             time.sleep(4)
             machine.reset()	
 
