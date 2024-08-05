@@ -1,6 +1,8 @@
 from machine import Pin
 import json
 import ota
+import neopixel
+
 client = None
 wlan = 0
 arm_status = True
