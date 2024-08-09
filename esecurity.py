@@ -8,7 +8,6 @@ import json
 class call_loop:
     def __init__(self):
         pass
-    
     def callback(self,topic_cmd,msg):
         decoded_topic = topic_cmd.decode('utf-8').strip()
         decoded_msg = msg.decode('utf-8').strip()
@@ -20,12 +19,12 @@ class call_loop:
                 shared.buffer["FD"] = '12'
                 shared.FG_Arm = True
                 print("shared.FG_Arm ",shared.FG_Arm)
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
             elif decoded_msg == '01':
                 shared.buffer["FD"] == '01'
                 shared.FG_Arm = False
                 print("shared.FG_Arm ",shared.FG_Arm)
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
             else:
                 print("Invalid Input !")
         elif decoded_topic.endswith("D"):
@@ -33,13 +32,13 @@ class call_loop:
             if decoded_msg == '00':
                 shared.buffer["D"] = decoded_msg
                 shared.arm_status = False
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.pix[0] = shared.RED
                 shared.pix.write()
             elif decoded_msg == '10':
                 shared.buffer["D"] = decoded_msg
                 shared.arm_status = True
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.pix[0] = shared.GREEN
                 shared.pix.write()
                 print("shared.arm_status is ", shared.arm_status)
@@ -56,7 +55,7 @@ class call_loop:
                 shared.buffer["R2"] = '0102'
                 shared.buffer["R3"] = '0103'
                 shared.buffer["R4"] = '0104'
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
         elif decoded_topic.endswith("MR"):
             if decoded_msg == '06':
                 machine.reset()
@@ -64,11 +63,11 @@ class call_loop:
             if decoded_msg == '0101':
                 shared.buffer["R1"] = decoded_msg
                 shared.R1State.value(0)
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 print("R1 state ",shared.R1State.value())
             elif decoded_msg == '1101' and shared.arm_status:
                 shared.buffer["R1"] = decoded_msg
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.R1State.value(1)
             else:
                 print("Invalid input")
@@ -76,11 +75,11 @@ class call_loop:
         elif decoded_topic.endswith("R2"):
             if decoded_msg == '0102':
                 shared.buffer["R2"] = decoded_msg
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.R2State.value(0)
             elif decoded_msg == '1102' and shared.arm_status:
                 shared.buffer["R2"] = decoded_msg
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.R2State.value(1)
             else:
                 print("Invalid input")
@@ -88,21 +87,21 @@ class call_loop:
             if decoded_msg == '0103':
                 shared.buffer["R3"] = decoded_msg
                 shared.R3State.value(0)
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
             elif decoded_msg == '1103' and shared.arm_status:
                 shared.buffer["R3"] = decoded_msg
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.R3State.value(1)
             else:
                 print("Invalid input")
         elif decoded_topic.endswith("R4"):
             if decoded_msg == '0104':
                 shared.buffer["R4"] = decoded_msg
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.R4State.value(0)
             elif decoded_msg == '1104' and shared.arm_status:
                 shared.buffer["R4"] = decoded_msg
-                shared.string_json = json.dumps(shared.buffer)
+                #shared.string_json = json.dumps(shared.buffer)
                 shared.R4State.value(1)
             else:
                 print("Invalid input")       
@@ -149,9 +148,9 @@ class call_loop:
                         shared.buffer["R4"] = "1104"
                         shared.buffer["FD"] = "12"
                         
-                shared.buffer_json[shared.config['device_info']['device_id']]=shared.buffer
-                shared.string_json = json.dumps(shared.buffer_json)
-                shared.client.publish(shared.topic_json,shared.string_json)
+                #shared.buffer_json[shared.config['device_info']['device_id']]=shared.buffer
+                #shared.string_json = json.dumps(shared.buffer_json)
+                #shared.client.publish(shared.topic_json,shared.string_json)
             else:
                 shared.FG_Arm = False
                 shared.R1State.value(0)
@@ -165,9 +164,12 @@ class call_loop:
                 shared.buffer["FD"] = '01'
                 shared.pix[1] = shared.RED
                 shared.pix.write()
-                shared.buffer_json[shared.config['device_info']['device_id']]=shared.buffer
-                shared.string_json = json.dumps(shared.buffer_json)
-                shared.client.publish(shared.topic_json,shared.string_json)
+                #shared.buffer_json[shared.config['device_info']['device_id']]=shared.buffer
+                #shared.string_json = json.dumps(shared.buffer_json)
+                #shared.client.publish(shared.topic_json,shared.string_json)
+            shared.buffer_json[shared.config['device_info']['device_id']]=shared.buffer
+            shared.string_json = json.dumps(shared.buffer_json)
+            shared.client.publish(shared.topic_json,shared.string_json)
         except Exception as e:
             print("Connection failed with error:",e)
             shared.pix[3] = shared.RED
