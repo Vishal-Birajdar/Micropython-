@@ -1,7 +1,7 @@
 {
     "mqtt": {
         "broker": "tunnel.datamann.in",
-     
+         "port": 8883,
         "user": "dipak",
         "password": "Dipak@123"
        
