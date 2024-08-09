@@ -34,14 +34,14 @@ class call_loop:
                 shared.buffer["D"] = decoded_msg
                 shared.arm_status = False
                 shared.string_json = json.dumps(shared.buffer)
-                pix[0] = RED
-                pix.write()
+                shared.pix[0] = shared.RED
+                shared.pix.write()
             elif decoded_msg == '10':
                 shared.buffer["D"] = decoded_msg
                 shared.arm_status = True
                 shared.string_json = json.dumps(shared.buffer)
-                pix[0] = GREEN
-                pix.write()
+                shared.pix[0] = shared.GREEN
+                shared.pix.write()
                 print("shared.arm_status is ", shared.arm_status)
             else:
                 print("Invalid input!!")
