@@ -121,7 +121,7 @@ p1.wifi_connect()
 def check_updates():
     try:
         firmware_url = "https://github.com/Vishal-Birajdar/Micropython-/"
-        files = ["shared.py", "esecurity.py", "config.json"]
+        files = ["main.py","shared.py", "esecurity.py", "config.json"]
         ota_updater = OTAUpdater(config['wifi']['ssid'],config['wifi']['password'] , firmware_url, files)
         ota_updater.download_and_install_update_if_available()
     except:
