@@ -109,10 +109,11 @@ class Connection:
             shared.client = None
             shared.pix[3] = shared.RED
             shared.pix.write()
-            
             time.sleep(0.3)
-            machine.reset()
             return shared.client
+            
+            machine.reset()
+            
 #----------------------------------------------------__________VERSION_UPDATE_______________--------------------------------------------
   
 p1 = Connection()       
