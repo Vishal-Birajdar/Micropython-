@@ -107,8 +107,12 @@ class Connection:
             print('Failed to connect to MQTT broker. Reconnecting...',e)
             shared.event('\n Failed to connect to MQTT broker. Reconnecting...')
             shared.client = None
-            return shared.client
+            shared.pix[3] = shared.RED
+            shared.pix.write()
+            
+            time.sleep(0.3)
             machine.reset()
+            return shared.client
 #----------------------------------------------------__________VERSION_UPDATE_______________--------------------------------------------
   
 p1 = Connection()       
