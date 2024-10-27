@@ -50,7 +50,6 @@ class Connection:
         
         for attempt in range(max_attempts):
             wlan.connect(config['wifi']['ssid'],config['wifi']['password'])
-            
             # Wait for connection to establish, checking periodically
             elapsed_time = 0
             while elapsed_time < retry_delay:
@@ -60,10 +59,7 @@ class Connection:
                     return True
                 time.sleep(check_interval)
                 elapsed_time += check_interval
-                
-            
             print(f"\n Attempt {attempt + 1}/{max_attempts} failed, retrying...")
-    
         else:
             print("wifi connection failed !")
             shared.event("wifi connection failed !\n")
@@ -91,10 +87,10 @@ class Connection:
         try:
             shared.client = MQTTClient(config['device_info']['device_id'],config['mqtt']['broker'],user=config['mqtt']['user'],password=config['mqtt']['password'],keepalive=60,ssl=True)
             shared.client.set_callback(x.callback)
-            shared.client.set_last_will(shared.topic_hb,'-1',False,qos=0)
+            shared.client.set_last_will(shared.topic_hb,"-1",False,qos=0)
             shared.client.connect()
             print('Connected to %s MQTT Broker' % config['mqtt']['broker'])
-            shared.client.publish(shared.topic_hb,'1')
+            
             shared.client.subscribe(shared.topic_cmd+"/D")
             shared.client.subscribe(shared.topic_cmd+"/FD")
             shared.client.subscribe(shared.topic_cmd+"/R1")
@@ -105,6 +101,7 @@ class Connection:
             shared.client.subscribe(shared.topic_cmd+"/MR")
             shared.pix[3] = shared.GREEN
             shared.pix.write()
+            #shared.client.publish(shared.topic_hb,"1")
             return shared.client  
         except Exception as e:
             print('Failed to connect to MQTT broker. Reconnecting...',e)
@@ -116,6 +113,7 @@ class Connection:
   
 p1 = Connection()       
 p1.wifi_connect()
+
 def check_updates():
     try:
         firmware_url = "https://github.com/Vishal-Birajdar/Micropython-/"
@@ -139,16 +137,20 @@ ssl_params = {
     "cert_reqs": ssl.CERT_REQUIRED
 }
 check_updates()
+#p1.mqtt_connect()
 p1.mqtt_connect()
+    
 
 #-----------------------------------------------------------__________CONNECTION_CHECKING________________---------------------------------------------
 
 while True:
     try:
+        shared.client.publish(shared.topic_hb,'1')
         currentMillis = time.ticks_ms()
         for i, s_pin in enumerate(sensor_pin):
             shared.buffer["S"+str(i+1)] = str(s_pin.value())+str(i+1)
             if s_pin.value()==1:shared.active_sensor[i]=1
+            else:shared.active_sensor[i]=0
         shared.act_sensor_cnt=shared.active_sensor.count(1)
         print("active sensor",shared.act_sensor_cnt)
         print("sensor buffer",shared.active_sensor)
@@ -159,23 +161,23 @@ while True:
             if not wlan.isconnected():
                 shared.pix[1] = shared.YELLOW
                 shared.pix.write()
+                p1.wifi_connect()
                 #time.sleep(.4)
-                wlan.disconnect()
-                for attempt in range(max_attempts):
-                    wlan.connect(config['wifi']['ssid'],config['wifi']['password'])
-                    gap_time = 0
-                    while gap_time < retry_delay:
-                        if wlan.isconnected():
-                            print("Connected")
-                            print("IP", wlan.ifconfig())
-                            shared.client.reconnect()
-                            print('client reconnected')
-                            shared.pix[1] = shared.WHITE
-                            shared.pix.write()
-                            #shared.event("wifi and client Reconnected\n")
-                        time.sleep(check_interval)
-                        gap_time += check_interval
-                    print("Retrying wifi..")           
+                """wlan.disconnect()
+                time.sleep(0.3)
+                print("Retrying wifi..")
+                wlan.connect(config['wifi']['ssid'],config['wifi']['password'])
+                time.sleep(0.5)
+                if wlan.isconnected():
+                    print("Connected")
+                    print("IP", wlan.ifconfig())
+                    shared.client.reconnect()
+                    print('client reconnected')
+                    shared.pix[1] = shared.WHITE
+                    shared.pix.write()
+                    break"""
+                        #shared.event("wifi and client Reconnected\n")
+                
     except Exception as e:
         print("Error with ",e)
         shared.event("\n Error in the main flie in loop")
