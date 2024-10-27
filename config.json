@@ -14,7 +14,7 @@
         "device_id":"ES4003",
         "c_code":"C-001",
         "a_code":"A-001",
-        "s_code":"S-POWERCON-HO",
+        "s_code":"POWERCON-HO",
         "s_topic":"STJ",
         "device_group":"G-01",
         "sensor_delay":2
