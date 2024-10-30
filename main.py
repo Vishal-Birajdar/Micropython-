@@ -79,9 +79,6 @@ class Connection:
             print(f"Error reading {file_path}: {e}")
             return None
 #------------------------------------------------------------_______________MQTT_CONNECTION________________--------------------------------------------------------
- 
- 
-#-----------------------------------------------------------______________________________--------------------------------------------------------
     def mqtt_connect(self):
         print("Attempting to connect to MQTT broker...")
         try:
@@ -90,7 +87,6 @@ class Connection:
             shared.client.set_last_will(shared.topic_hb,"-1",False,qos=0)
             shared.client.connect()
             print('Connected to %s MQTT Broker' % config['mqtt']['broker'])
-            
             shared.client.subscribe(shared.topic_cmd+"/D")
             shared.client.subscribe(shared.topic_cmd+"/FD")
             shared.client.subscribe(shared.topic_cmd+"/R1")
@@ -111,9 +107,7 @@ class Connection:
             shared.pix.write()
             time.sleep(0.3)
             return shared.client
-            
             machine.reset()
-            
 #----------------------------------------------------__________VERSION_UPDATE_______________--------------------------------------------
   
 p1 = Connection()       
@@ -122,7 +116,7 @@ p1.wifi_connect()
 def check_updates():
     try:
         firmware_url = "https://github.com/Vishal-Birajdar/Micropython-/"
-        files = ["main.py","shared.py", "esecurity.py", "config.json"]
+        files = ["shared.py", "esecurity.py", "config.json"]
         ota_updater = OTAUpdater(config['wifi']['ssid'],config['wifi']['password'] , firmware_url, files)
         ota_updater.download_and_install_update_if_available()
     except:
