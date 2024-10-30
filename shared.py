@@ -20,13 +20,13 @@ active_sensor=[0,0,0,0]
 f = open('config.json',"r")
 config = json.load(f)
 
-buffer = {"Device_Id":config['device_info']['device_id'],"S2":'02',"D":'10',"FD":"0105","S1":'01',"S3":'03',"S4":'04',"R1":'0101',"R2":'0102',"R3":'0103',"R4":'0104',"HB":'1'}
+buffer = {"D":'10',"FD":"01","S1":'01',"S2":'02',"S3":'03',"S4":'04',"R1":'0101',"R2":'0102',"R3":'0103',"R4":'0104',"HB":'1'}
 string_json = json.dumps(buffer)
 buffer_json ={}
 
-topic_json = config['device_info']['c_code']+'/'+config['device_info']['a_code']+'/'+config['device_info']['s_code']+'/'+config['device_info']['device_id']+'/'+config['device_info']['s_topic']
-topic_cmd = config['device_info']['c_code']+"/"+config['device_info']['a_code']+"/"+config['device_info']['s_code']+'/'+config['device_info']['device_id']+"/CC"
-topic_hb = config['device_info']['c_code']+"/"+config['device_info']['a_code']+"/"+config['device_info']['s_code']+'/'+config['device_info']['device_id']+"/HB"
+topic_json = config['device_info']['c_code']+"/"+config['device_info']['a_code']+"/"+config['device_info']['s_code']+"/"+config['device_info']['s_topic']+"/"+config['device_info']['device_id']
+topic_cmd = config['device_info']['c_code']+"/"+config['device_info']['a_code']+"/"+config['device_info']['s_code']+"/CC/"+config['device_info']['device_id']
+topic_hb = config['device_info']['c_code']+"/"+config['device_info']['a_code']+"/"+config['device_info']['s_code']+"/HB/"
 
 pixPin = 22
 Pixsize = 5
@@ -47,9 +47,9 @@ file_name = ""
 def update_filename():
     global file_name
     # Get the current local time
-    #t = time.localtime()
+    t = time.localtime()
     # Create a filename based on the current date
-    file_name = '{:04d}_{:02d}_{:02d}.txt'.format(time.localtime()[0], time.localtime()[1], time.localtime()[2])
+    file_name = '{:04d}_{:02d}_{:02d}.txt'.format(t[0], t[1], t[2])
 
 #file_name = '{:04d}_{:02d}_{:02d}_{:02d}_{:02d}_{:02d}.txt'.format(t[0], t[1], t[2], t[4], t[5], t[6])
 
@@ -69,4 +69,5 @@ def event(msg):
     return log_entry       
    
 #-------------------------------------------------________________________--------------------------------------------------- 
+
 
